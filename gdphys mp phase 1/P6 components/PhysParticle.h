@@ -18,7 +18,7 @@ public:
 	sf::CircleShape particleShape;
 
 	bool isFinished = false;
-	float damping = 0.9f;
+	float damping = 0.8f;
 
 public:
 	void update(float time);
@@ -33,6 +33,7 @@ public:
 private:
 	void updatePos(float time);
 	void updateVelocity(float time);
+	void updateDestroyed();
 
 private:
 	bool isDestroyed = false;

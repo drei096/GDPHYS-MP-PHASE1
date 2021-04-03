@@ -7,6 +7,7 @@ float PhysVector::magnitude()
 
 PhysVector PhysVector::direction()
 {
+
 	PhysVector result = PhysVector(0, 0);
 	float magnit;
 

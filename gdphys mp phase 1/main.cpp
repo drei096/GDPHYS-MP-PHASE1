@@ -15,34 +15,29 @@
 using namespace std;
 
 /*
-* CHANGES SINCE 4/3/2021 7:25 PM:
+* CHANGES SINCE 4/3/2021 8:41 PM:
 * Particle Destroyer added inside PhysParticle (updater)
 * Particle Creation inside while loop
 * Changed Force Values Randomizer
 * Changed X Direction added value
+* Particle Destroyer Updated to destroy in a range in if statement
+* Added an additional if inside timeSinceLast if statement
+* Added a particleCounter at the end of the while loop
+* Increased forceVal range (16k-20k)
+* Pakicheck nalang if may simultaneous fire sa simulang simula ng simu
 */
 
-/*
-void delay(int number_of_seconds)
+
+
+int main() 
 {
-    // Converting time into milli_seconds
-    int milli_seconds = 1000 * number_of_seconds;
-
-    // Storing start time
-    clock_t start_time = clock();
-
-    // looping till required time is not achieved
-    while (clock() < start_time + milli_seconds);
-}
-*/
-
-int main() {
     srand(time(0));
 
     const sf::Time TimePerFrame = sf::seconds(1.f / 60.f);
     Utils utils;
     PhysicsWorld pWorld = PhysicsWorld();
     vector<PhysParticle*> particleList;
+    int particleCount = 0;
 
     sf::RenderWindow window(sf::VideoMode(720, 500), "P6 Test");
 
@@ -89,44 +84,50 @@ int main() {
 
         timeSinceLast += clock.restart();
 
-        if (timeSinceLast > TimePerFrame) {
-
-            for (int i = 0; i < 1; i++)
+        if (timeSinceLast > TimePerFrame) 
+        {
+            if (pWorld.particles.size() < 25)
             {
-                float forceVal = rand() % 7000 + 9000;
-                PhysVector direction(rand() % 30 + 2.5, rand() % 30 + 10);
-                float magnitude = direction.magnitude();
+                for (int i = 0; i < 1; i++)
+                {
+                    float forceVal = rand() % 20000 + 16000;
+                    PhysVector direction(rand() % 30 + 2.5, rand() % 30 + 10);
+                    float magnitude = direction.magnitude();
 
-                direction.x = direction.x / magnitude;
-                direction.x = direction.x * (PI / 180);
+                    direction.x = direction.x / magnitude;
+                    direction.x = direction.x * (PI / 180);
 
-                direction.y = 1 / magnitude;
-                direction.y = direction.y * (PI / 180);
-                //direction.y = direction.y / magnitude;
+                    direction.y = 1 / magnitude;
+                    direction.y = direction.y * (PI / 180);
+                    //direction.y = direction.y / magnitude;
 
-                PhysParticle* particle = new PhysParticle();
+                    PhysParticle* particle = new PhysParticle();
 
-                particle->name = "firework " + i;
-                particle->mass = 1;
+                    particle->name = "firework " + i;
+                    particle->mass = 1;
 
-                particle->addForce(PhysVector(cos(atan2(direction.x, direction.y)) * forceVal * (rand() % 2 == 1 ? 1 : -1), -1 * sin(atan2(direction.x, direction.y)) * forceVal));
+                    particle->addForce(PhysVector(cos(atan2(direction.x, direction.y)) * forceVal * (rand() % 2 == 1 ? 1 : -1), -1 * sin(atan2(direction.x, direction.y)) * forceVal));
 
-                particle->particleShape.setRadius(5.0f);
-                particle->particleShape.setFillColor(sf::Color(rand() % 256 + 20, rand() % 256 + 20, rand() % 256 + 20));
-                particle->particleShape.setOrigin(particle->particleShape.getRadius(), particle->particleShape.getRadius());
-                particle->position = PhysVector(360, 400);
-                particle->initialPos = particle->position;
-                particle->particleShape.setPosition(particle->position.x, particle->position.y);
+                    particle->particleShape.setRadius(5.0f);
+                    particle->particleShape.setFillColor(sf::Color(rand() % 256 + 20, rand() % 256 + 20, rand() % 256 + 20));
+                    particle->particleShape.setOrigin(particle->particleShape.getRadius(), particle->particleShape.getRadius());
+                    particle->position = PhysVector(360, 400);
+                    particle->initialPos = particle->position;
+                    particle->particleShape.setPosition(particle->position.x, particle->position.y);
 
-                pWorld.addParticle(particle);
-                particleList.push_back(particle);
+                    pWorld.addParticle(particle);
+                    particleList.push_back(particle);
+                    particleCount++;
 
-                //delay(1);
+                    //delay(1);
+                }
             }
+            
 
             timeSinceLast -= TimePerFrame;
 
             pWorld.update(TimePerFrame.asMilliseconds() / 1000.0f);
+
             for (int i = 0; i < particleList.size(); i++)
             {
                 particleList[i]->particleShape.setPosition(particleList[i]->position.x, particleList[i]->position.y);
@@ -156,6 +157,9 @@ int main() {
             window.draw(groundLine);
             window.display();
 
+            //cout << particleCount << endl;
+     
+                
             
         }
     }

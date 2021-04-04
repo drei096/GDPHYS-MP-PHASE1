@@ -18,6 +18,7 @@ public:
 	sf::CircleShape particleShape;
 
 	bool isFinished = false;
+	//EDIT DAMPING VALUE HERE
 	float damping = 0.8f;
 
 public:

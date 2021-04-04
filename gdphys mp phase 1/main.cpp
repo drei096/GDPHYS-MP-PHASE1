@@ -1,10 +1,16 @@
+/*
+* GDPHYS MP PHASE 1 - PARTICLE SYSTEM
+* DEVELOPED BY:
+* GAURANA, ALDREY
+* TALLADOR, ERYN
+*/
+
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 #include <cstdlib>
 #include <vector>
 #include <ctime>
-#include <Windows.h>
 #include "P6 components/PhysVector.h"
 #include "P6 components/PhysParticle.h"
 #include "Utils.h"
@@ -23,6 +29,7 @@ using namespace std;
 * Particle Remove Time is set to either 0.5 second or 1 second 
     (could be accessed in PhysParticle.cpp under UpdateDestroyed() function)
 * Particle Position is set to (360, 400)
+* Damping Value is set to 0.8. (could be edited in PhysParticle.h) 
 */
 
 
@@ -37,16 +44,18 @@ int main()
     vector<PhysParticle*> particleList;
     int particleCount = 0;
 
-    sf::RenderWindow window(sf::VideoMode(720, 500), "P6 Test");
+    //Window
+    sf::RenderWindow window(sf::VideoMode(720, 500), "GDPHYS MP Phase 1");
 
     sf::Event event;
 
-    //ground marker
+    //Ground Marker
     sf::RectangleShape groundLine;
     groundLine.setFillColor(sf::Color::White);
     groundLine.setSize(sf::Vector2f(720.0f, 10.0f));
     groundLine.setPosition(0, 400);
 
+    //Clock
     sf::Clock clock;
     sf::Time timeSinceLast = sf::Time::Zero;
 
@@ -66,11 +75,12 @@ int main()
                     //VALUE INITIALIZATION
                     //Change Force Value here
                     float forceVal = rand() % 20000 + 16000;
+
                     //Change Direction here
                     //NOTE: Only modify the added value as modifying the "30" would make it spread in a much larger cone
                     PhysVector direction(rand() % 30 + 2.5, rand() % 30 + 10);
                     float magnitude = direction.magnitude();
-
+                    
                     direction.x = direction.x / magnitude;
                     direction.x = direction.x * (PI / 180);
 
@@ -82,15 +92,18 @@ int main()
 
                     //Value Assigning
                     particle->name = "firework " + i;
+                    //EDIT MASS HERE
                     particle->mass = 1;
 
                     //addForce (direction and forceVal will reflect on this assignation)         
                     //rand inside is for a positive or negative x value
                     particle->addForce(PhysVector(cos(atan2(direction.x, direction.y)) * forceVal * (rand() % 2 == 1 ? 1 : -1), -1 * sin(atan2(direction.x, direction.y)) * forceVal));
 
+                    //Particle Shape Creation
                     particle->particleShape.setRadius(5.0f);
                     particle->particleShape.setFillColor(sf::Color(rand() % 256 + 20, rand() % 256 + 20, rand() % 256 + 20));
                     particle->particleShape.setOrigin(particle->particleShape.getRadius(), particle->particleShape.getRadius());
+
                     //Position at Middle of the Window
                     particle->position = PhysVector(360, 400);
                     particle->initialPos = particle->position;
@@ -114,12 +127,11 @@ int main()
             }
 
 
-
-
             window.pollEvent(event);
             if (event.type == sf::Event::Closed)
                 window.close();
 
+            //DRAWING THE PARTICLES
             window.clear();
 
             for (list<PhysParticle*>::iterator i = pWorld.particles.begin(); i != pWorld.particles.end(); i++)
@@ -131,8 +143,10 @@ int main()
 
             window.draw(groundLine);
             window.display();
+            //END OF PARTICLE DRAWING
                 
-            cout << pWorld.particles.size() << endl;
+            //Uncomment this if you want to see the particle count during simulation
+            //cout << pWorld.particles.size() << endl;
         }
     }
 

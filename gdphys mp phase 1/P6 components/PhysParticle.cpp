@@ -34,12 +34,9 @@ void PhysParticle::updateVelocity(float time)
 
 void PhysParticle::updateDestroyed()
 {
-	if (timer.getElapsedTime().asSeconds() >= (rand() % 2 - 1 == 0 ? 0.5 : 1))
-		//(bullet.position.y >= window.getSize().y && bullet.position.x > bullet.initialPos.x)
+	if (timer.getElapsedTime().asSeconds() >= (rand() % 2 == 0 ? 0.5 : 1))
 	{
 		setIsDestroyed();
-
-		//break;
 	}
 }
 

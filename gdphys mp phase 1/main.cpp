@@ -15,24 +15,22 @@
 using namespace std;
 
 /*
-* CHANGES SINCE 4/3/2021 8:41 PM:
-* Particle Destroyer added inside PhysParticle (updater)
-* Particle Creation inside while loop
-* Changed Force Values Randomizer
-* Changed X Direction added value
-* Particle Destroyer Updated to destroy in a range in if statement
-* Added an additional if inside timeSinceLast if statement
-* Added a particleCounter at the end of the while loop
-* Increased forceVal range (16k-20k)
-* Pakicheck nalang if may simultaneous fire sa simulang simula ng simu
+* DEFAULT VALUES:
+* Max Particle Size is set to 25
+* Force Value is between 16000 to 36000
+* Direction Value is between 10 to 40
+* Gravity is -20m/s2 (could be accessed in PhysicsWorld.h)
+* Particle Remove Time is set to either 0.5 second or 1 second 
+    (could be accessed in PhysParticle.cpp under UpdateDestroyed() function)
+* Particle Position is set to (360, 400)
 */
-
 
 
 int main() 
 {
     srand(time(0));
 
+    //Variable Initialization
     const sf::Time TimePerFrame = sf::seconds(1.f / 60.f);
     Utils utils;
     PhysicsWorld pWorld = PhysicsWorld();
@@ -49,34 +47,6 @@ int main()
     groundLine.setSize(sf::Vector2f(720.0f, 10.0f));
     groundLine.setPosition(0, 400);
 
-    /*
-    //Bullet 1 particle
-    PhysParticle bullet;
-    bullet.name = "Bullet 1";
-    bullet.mass = 20;
-    bullet.addForce(PhysVector(cos(atan2(0.6, 0.3)) * 16000, -1 * sin(atan2(0.6, 0.3)) * 16000));
-    bullet.particleShape.setRadius(10.0f);
-    bullet.particleShape.setFillColor(sf::Color::White);
-    bullet.particleShape.setOrigin(bullet.particleShape.getRadius(), bullet.particleShape.getRadius());
-    bullet.position = PhysVector(0, window.getSize().y - bullet.particleShape.getRadius());
-    bullet.initialPos = bullet.position;
-    bullet.particleShape.setPosition(bullet.position.x, bullet.position.y);
-
-    pWorld.addParticle(&bullet);
-    */
-
-    /*
-    //Bullet 1 shape
-    sf::CircleShape bullet1(10.0f);
-    bullet1.setFillColor(sf::Color::White);
-    bullet1.setOrigin(bullet1.getRadius(), bullet1.getRadius());
-
-    //Bullet 1 setPos
-    bullet.position = PhysVector(0, window.getSize().y - bullet1.getRadius());
-    bullet.initialPos = bullet.position;
-    bullet1.setPosition(bullet.position.x, bullet.position.y);
-    */
-
     sf::Clock clock;
     sf::Time timeSinceLast = sf::Time::Zero;
 
@@ -86,11 +56,18 @@ int main()
 
         if (timeSinceLast > TimePerFrame) 
         {
+            //Particle Size clamped to 25
+            //For a larger particle size cap, simple modify the "25"
             if (pWorld.particles.size() < 25)
             {
+                //Creates one particle
                 for (int i = 0; i < 1; i++)
                 {
+                    //VALUE INITIALIZATION
+                    //Change Force Value here
                     float forceVal = rand() % 20000 + 16000;
+                    //Change Direction here
+                    //NOTE: Only modify the added value as modifying the "30" would make it spread in a much larger cone
                     PhysVector direction(rand() % 30 + 2.5, rand() % 30 + 10);
                     float magnitude = direction.magnitude();
 
@@ -99,18 +76,22 @@ int main()
 
                     direction.y = 1 / magnitude;
                     direction.y = direction.y * (PI / 180);
-                    //direction.y = direction.y / magnitude;
 
+                    //PARTICLE CREATION
                     PhysParticle* particle = new PhysParticle();
 
+                    //Value Assigning
                     particle->name = "firework " + i;
                     particle->mass = 1;
 
+                    //addForce (direction and forceVal will reflect on this assignation)         
+                    //rand inside is for a positive or negative x value
                     particle->addForce(PhysVector(cos(atan2(direction.x, direction.y)) * forceVal * (rand() % 2 == 1 ? 1 : -1), -1 * sin(atan2(direction.x, direction.y)) * forceVal));
 
                     particle->particleShape.setRadius(5.0f);
                     particle->particleShape.setFillColor(sf::Color(rand() % 256 + 20, rand() % 256 + 20, rand() % 256 + 20));
                     particle->particleShape.setOrigin(particle->particleShape.getRadius(), particle->particleShape.getRadius());
+                    //Position at Middle of the Window
                     particle->position = PhysVector(360, 400);
                     particle->initialPos = particle->position;
                     particle->particleShape.setPosition(particle->position.x, particle->position.y);
@@ -119,7 +100,6 @@ int main()
                     particleList.push_back(particle);
                     particleCount++;
 
-                    //delay(1);
                 }
             }
             
@@ -134,7 +114,6 @@ int main()
             }
 
 
-            //bullet.particleShape.setPosition(bullet.position.x, bullet.position.y);
 
 
             window.pollEvent(event);
@@ -150,21 +129,12 @@ int main()
                 }
             }
 
-
-            //if (pWorld.particles.begin.getIsDestroyed() != true)
-                //window.draw(bullet.particleShape);
-
             window.draw(groundLine);
             window.display();
-
-            //cout << particleCount << endl;
-     
                 
-            
+            cout << pWorld.particles.size() << endl;
         }
     }
-
-    //utils.displayDistanceTravelled(bullet);
 
 
     return 0;

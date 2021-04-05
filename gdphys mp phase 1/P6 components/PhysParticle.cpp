@@ -34,6 +34,7 @@ void PhysParticle::updateVelocity(float time)
 
 void PhysParticle::updateDestroyed()
 {
+	//Change Time Destruction here after the question mark
 	if (timer.getElapsedTime().asSeconds() >= (rand() % 2 == 0 ? 0.5 : 1))
 	{
 		setIsDestroyed();

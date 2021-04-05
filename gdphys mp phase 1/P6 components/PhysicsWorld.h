@@ -8,6 +8,7 @@ class PhysicsWorld
 {
 public:
 	list <PhysParticle*> particles;
+	//Change Gravity Value Here
 	PhysVector gravity = PhysVector(0, 20);  // 20m/s2 down
 
 public:

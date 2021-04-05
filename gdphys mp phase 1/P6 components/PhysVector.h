@@ -9,7 +9,7 @@ public:
 public:
 	float magnitude();
 	PhysVector direction();
-	PhysVector operator*(const float f); //A+Bx
+	PhysVector operator*(const float f); //A*Bx
 	PhysVector operator+(PhysVector b); //A+B
 	PhysVector operator-(PhysVector b); //A-B
 	PhysVector operator*(PhysVector b); //Component Product of A and B

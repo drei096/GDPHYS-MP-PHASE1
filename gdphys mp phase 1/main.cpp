@@ -24,11 +24,11 @@ using namespace std;
 * DEFAULT VALUES:
 * Max Particle Size is set to 25
 * Force Value is between 16000 to 36000
-* Direction Value is between 10 to 40
-* Gravity is -20m/s2 (could be accessed in PhysicsWorld.h)
-* Particle Remove Time is set to either 0.5 second or 1 second 
-    (could be accessed in PhysParticle.cpp under UpdateDestroyed() function)
+* Direction Value is between 2.5 to 32.5
 * Particle Position is set to (360, 400)
+* Gravity is -20m/s2 (could be accessed in PhysicsWorld.h)
+* Particle Destructor is set to either 0.5 second or 1 second 
+    (could be accessed in PhysParticle.cpp under UpdateDestroyed() function)
 * Damping Value is set to 0.8. (could be edited in PhysParticle.h) 
 */
 
